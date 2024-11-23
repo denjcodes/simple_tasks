@@ -20,29 +20,29 @@ Provide a complete plan to help the user complete the task
 
 Keep steps short and visual. Focus on "what I see" and "what I do." If a step seems complex, break it down further. Be patient and supportive in your tone.
 
-Given a task, a query, and a description, you should generate a series of steps in the format:
+Given a task, a query, and a description, you should generate a series of steps in a python list format.
 Task: <task description>
 Query: <query description>
 Description: <description>
 Steps:
-1. <step 1>
-2. <step 2>
-3. <step 3>
-...
+["1. <step 1>", 
+ "2. <step 2>", 
+ "3. <step 3>",
+ ...]
 
 Example:
 Task: Organize the pantry.
 Query: What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?
 Description: The pantry has 3 shelves. There is a sugar container on the top shelf, a bread loaf and some containers. The middle shelf has some pots and potatoes. The bottom shelf has some cans, apples and empty jars.
 Steps:
-1. Take out the bread loaf and the sugar container.
-2. Take out the jars and apples from the bottom shelf.
-3. Move the pots to the top shelf.
-4. Move the potates to the bottom shelf.
-5. Place the sugar container on the left side of the middle shelf.
-6. Place the bread loaf next to the sugar container.
-7. Put the jars on the right side of the top shelf.
-8. Put the apples on the right side of the middle shelf.
+["1. Take out the bread loaf and the sugar container.",
+ "2. Take out the jars and apples from the bottom shelf.",
+ "3. Move the pots to the top shelf.",
+ "4. Move the potates to the bottom shelf.",
+ "5. Place the sugar container on the left side of the middle shelf.",
+ "6. Place the bread loaf next to the sugar container.",
+ "7. Put the jars on the right side of the top shelf.",
+ "8. Put the apples on the right side of the middle shelf."]
 """
 
     def initial_prompt(self, task, query, description):
@@ -58,7 +58,9 @@ Steps:"""
                 ]
     
     def generate_steps(self, task, query, description):
-        completion = client.chat.completions.create(
+        i = 0
+        while i < 5:
+            completion = client.chat.completions.create(
                         model="llama-3.1-70b-versatile",
                         messages=self.init_messages(task, query, description),
                         temperature=1,
@@ -67,7 +69,32 @@ Steps:"""
                         stream=False,
                         stop=None,
                     )
-        return completion.choices[0].message.content
+            if "Steps:" not in completion.choices[0].message.content:
+                print(f'"Steps:" not found in completion. Attempt {i}')
+                i += 1
+                continue
+            steps = completion.choices[0].message.content.split("Steps:")[-1]
+            try:
+                steps = eval(steps)
+                return steps
+            except:
+                print(f"Output not in list format. Attempt {i}")
+                i += 1
+                
+        #     steps = completion.choices[0].message.content.split("\n")[6:]
+        #     if len(steps) > 1:
+        #         return steps
+        #     i += 1
+        # completion = client.chat.completions.create(
+        #                 model="llama-3.1-70b-versatile",
+        #                 messages=self.init_messages(task, query, description),
+        #                 temperature=1,
+        #                 max_tokens=1024,
+        #                 top_p=1,
+        #                 stream=False,
+        #                 stop=None,
+        #             )
+        # return completion.choices[0].message.content
     
 if __name__ == "__main__":
     task_breaker = TaskBreaker()
