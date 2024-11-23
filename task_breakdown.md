@@ -10,14 +10,15 @@ High Level Idea
 
 Tasks:
 
-- How to prompt Llama with an image (done)
+- How to prompt Llama with an image (done) (image_describer.py)
 - Prompt Engineering
     - Persona
     - Few-shots (Optional)
     - Chain of Thought
     - RAG
     - Interview
-- Generate prompts using Llama
+- Generate question prompts using Llama (image_question_generator.py)
+- Ask user about what they see (image_requestor.py)
 - Text to speech (done)
 - Speech to Text (done)
 - Integration with Camera
@@ -28,4 +29,20 @@ Agent to generate prompts for image questioning
 Agent to question the image for details
 
 Agent to break down the text
+
+
+
+
+
+User: I want to clean the table
+
+Questioner          (I want to clean the table): What do you see on the table?
+Picture Requestor   (I want to clean the table): Can you take a picture of the table?
+
+Describer           (Picture of Table)+(What do you see on the table): I see a plate, a fork, a knife, a glass, and a napkin on the table.
+
+
+
+
+
 
