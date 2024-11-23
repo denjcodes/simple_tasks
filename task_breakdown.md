@@ -42,7 +42,24 @@ Picture Requestor   (I want to clean the table): Can you take a picture of the t
 Describer           (Picture of Table)+(What do you see on the table): I see a plate, a fork, a knife, a glass, and a napkin on the table.
 
 
+Example for memory task:
+<Persona for task breaker>
+Task: <task>
+Query: <query>
+Description: <description>
+Steps:
+- <step 1>
+- <step 2>
+- <step 3>
+...
 
-
-
-
+"""Memory element"""
+User: Given a list of steps, choose the first one to perform
+Assistant: Step 1: <step 1>
+User: Step 1 complete.
+User: Scene Description: <scene description>. Based on the current scene, are we on the right track? What is the next step?
+Assistant: Great! We are/arenot on the right track. The next step is <step 2>.
+User: Step 2 complete.
+User: Scene Description: <scene description>. Based on the current scene, are we on the right track? What is the next step?
+Assistant: Great! We are/arenot on the right track. The next step is <step 3>.
+...
