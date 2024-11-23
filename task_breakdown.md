@@ -10,7 +10,7 @@ High Level Idea
 
 Tasks:
 
-- How to prompt Llama with an image
+- How to prompt Llama with an image (done)
 - Prompt Engineering
     - Persona
     - Few-shots (Optional)
@@ -18,7 +18,8 @@ Tasks:
     - RAG
     - Interview
 - Generate prompts using Llama
-- Text to speech
+- Text to speech (done)
+- Speech to Text (done)
 - Integration with Camera
 - 
 

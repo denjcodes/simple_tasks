@@ -1,0 +1,6 @@
+groq
+pyttsx3
+openai-whisper
+ffmpeg-python
+numpy==1.26.4
+ffmpeg

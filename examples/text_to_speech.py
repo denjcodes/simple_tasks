@@ -9,7 +9,7 @@ engine.setProperty('volume', 0.9)  # Volume (0.0 to 1.0)
 
 # Speak the text
 # text = "hello Tan, what are you working on?"
-text = "Tan, please answer me"
+text = "Faiz, Sharuka, are you guys hungry?"
 engine.say(text)
 
 # Wait for the speech to finish
