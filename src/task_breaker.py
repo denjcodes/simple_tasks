@@ -130,27 +130,30 @@ if __name__ == "__main__":
     task_breaker = TaskBreaker()
     
     tasks = [
-            "Organize the pantry.", "Identify and recycle.",
-            "Sort my laundry.", "Do gardening.",
-            "Repair my bike.", "Prepare my breakfast."
+            # "Organize the pantry.", "Identify and recycle.",
+            # "Sort my laundry.", "Do gardening.",
+            # "Repair my bike.", "Prepare my breakfast."
+            "I want to clean this table."
             ]
     
     queries = [
-            "What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?",
-            "What objects in the scene are made of paper, plastic, glass, or metal, and how are they currently disposed of (e.g., in trash or recycling bins)?",
-            "What types of clothing, including their dominant colors and fabric care labels, are visible in the laundry pile?",
-            "What plants and weeds are in the gardening area, and what is their condition - e.g., are they healthy, dry, or overgrown?",
-            "What components of the bicycle (such as wheels, brakes, gears, or chain) appear damaged or worn out, and what tools or spare parts might be needed to repair them in the surrounding workspace or storage area?",
-            "What edible items, such as fruits, bread, eggs, or breakfast cereals, are visible on the countertops or in the open cabinets in the kitchen?",
+            # "What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?",
+            # "What objects in the scene are made of paper, plastic, glass, or metal, and how are they currently disposed of (e.g., in trash or recycling bins)?",
+            # "What types of clothing, including their dominant colors and fabric care labels, are visible in the laundry pile?",
+            # "What plants and weeds are in the gardening area, and what is their condition - e.g., are they healthy, dry, or overgrown?",
+            # "What components of the bicycle (such as wheels, brakes, gears, or chain) appear damaged or worn out, and what tools or spare parts might be needed to repair them in the surrounding workspace or storage area?",
+            # "What edible items, such as fruits, bread, eggs, or breakfast cereals, are visible on the countertops or in the open cabinets in the kitchen?",
+            "What objects are on the table, and what is their condition in terms of dirtiness or clutter, to guide the cleaning process?"
             ]
     
     descriptions = [
-            "The pantry is full of food items and containers. They are arranged on the shelves by category.",
-            "There are objects made of paper, plastic, glass, and metal. They are disposed of in separate trash and recycling bins.",
-            "The laundry pile contains various types of clothing. Each item has a fabric care label with washing instructions.",
-            "The gardening area has a mix of plants and weeds. Some are healthy, while others look dry or overgrown.",
-            "The bicycle has several damaged components like wheels, brakes, and gears. Repair tools and spare parts are scattered around.",
-            "The kitchen countertops and cabinets have fruits, bread, eggs, and breakfast cereals on display.",
+            # "The pantry is full of food items and containers. They are arranged on the shelves by category.",
+            # "There are objects made of paper, plastic, glass, and metal. They are disposed of in separate trash and recycling bins.",
+            # "The laundry pile contains various types of clothing. Each item has a fabric care label with washing instructions.",
+            # "The gardening area has a mix of plants and weeds. Some are healthy, while others look dry or overgrown.",
+            # "The bicycle has several damaged components like wheels, brakes, and gears. Repair tools and spare parts are scattered around.",
+            # "The kitchen countertops and cabinets have fruits, bread, eggs, and breakfast cereals on display.",
+            "The table features two water bottles, one with a label indicating it is half full and the other with a label indicating it is nearly empty. Additionally, there are two cans, one of which appears to be empty and the other with a label indicating it is nearly full. A bag of chips is also present, with some of its contents spilled out onto the table. The overall condition of the table is moderately dirty, with visible crumbs and spills from the chips."            
             ]
     
     for task, query, description in zip(tasks, queries, descriptions):

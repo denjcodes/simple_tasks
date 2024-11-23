@@ -1,18 +1,3 @@
-2024-11-23 13:29:52,284 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:52,286 - __main__ - INFO - Task: I need to organize the pantry.
-Question: What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?
-2024-11-23 13:29:52,971 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:52,972 - __main__ - INFO - Task: I need to identify and recycle.
-Question: What objects in the scene are made of paper, plastic, glass, or metal, and how are they currently disposed of (e.g., in trash or recycling bins)?
-2024-11-23 13:29:53,349 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:53,351 - __main__ - INFO - Task: I need to sort my laundry.
-Question: What types of clothing, including their dominant colors and fabric care labels, are visible in the laundry pile?
-2024-11-23 13:29:53,919 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:53,921 - __main__ - INFO - Task: I need to do gardening.
-Question: What plants and weeds are in the gardening area, and what is their condition - e.g., are they healthy, dry, or overgrown?
-2024-11-23 13:29:54,681 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:54,683 - __main__ - INFO - Task: I need to repair my bike.
-Question: What components of the bicycle (such as wheels, brakes, gears, or chain) appear damaged or worn out, and what tools or spare parts might be needed to repair them in the surrounding workspace or storage area?
-2024-11-23 13:29:55,047 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 13:29:55,048 - __main__ - INFO - Task: I need to prepare my breakfast.
-Question: What edible items, such as fruits, bread, eggs, or breakfast cereals, are visible on the countertops or in the open cabinets in the kitchen?
+2024-11-23 18:22:47,066 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-23 18:22:47,070 - __main__ - INFO - Task: I want to clean this table.
+Question: What objects are on the table, and what is their condition in terms of dirtiness or clutter, to guide the cleaning process?

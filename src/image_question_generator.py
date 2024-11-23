@@ -63,9 +63,10 @@ if __name__ == "__main__":
     image_question_generator = ImageQuestionGenerator()
 
     tasks = [
-            "I need to organize the pantry.", "I need to identify and recycle.",
-            "I need to sort my laundry.", "I need to do gardening.",
-            "I need to repair my bike.", "I need to prepare my breakfast."
+            # "I need to organize the pantry.", "I need to identify and recycle.",
+            # "I need to sort my laundry.", "I need to do gardening.",
+            # "I need to repair my bike.", "I need to prepare my breakfast."
+            "I want to clean this table."
             ]
 
     for task in tasks:

@@ -48,7 +48,7 @@ Description:"""
     
     def generate_description(self, question, image_path):
         completion = client.chat.completions.create(
-                        model="llama-3.2-90b-vision-preview",
+                        model="llama-3.2-11b-vision-preview",
                         messages=[
                             # {"role": "system", "content": self.system_prompt},
                             {"role": "user", "content": [
@@ -69,20 +69,22 @@ if __name__ == "__main__":
     image_describer = ImageDescriber()
     
     questions = [
-            "What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?",
-            "What objects in the scene are made of paper, plastic, glass, or metal, and how are they currently disposed of (e.g., in trash or recycling bins)?",
-            "What types of clothing, including their dominant colors and fabric care labels, are visible in the laundry pile?",
-            "What plants and weeds are in the gardening area, and what is their condition - e.g., are they healthy, dry, or overgrown?",
-            "What components of the bicycle (such as wheels, brakes, gears, or chain) appear damaged or worn out, and what tools or spare parts might be needed to repair them in the surrounding workspace or storage area?",
-            "What edible items, such as fruits, bread, eggs, or breakfast cereals, are visible on the countertops or in the open cabinets in the kitchen?",
+            # "What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?",
+            # "What objects in the scene are made of paper, plastic, glass, or metal, and how are they currently disposed of (e.g., in trash or recycling bins)?",
+            # "What types of clothing, including their dominant colors and fabric care labels, are visible in the laundry pile?",
+            # "What plants and weeds are in the gardening area, and what is their condition - e.g., are they healthy, dry, or overgrown?",
+            # "What components of the bicycle (such as wheels, brakes, gears, or chain) appear damaged or worn out, and what tools or spare parts might be needed to repair them in the surrounding workspace or storage area?",
+            # "What edible items, such as fruits, bread, eggs, or breakfast cereals, are visible on the countertops or in the open cabinets in the kitchen?",
+            "What objects are on the table, and what is their condition in terms of dirtiness or clutter, to guide the cleaning process?"
             ]
     
 
 
     image_paths = [
-            "images/pantry.jpg", "images/recycling.jpg",
-            "images/laundry.png", "images/gardening.jpg",
-            "images/bike.jpg", "images/breakfast.jpg"
+            # "images/pantry.jpg", "images/recycling.jpg",
+            # "images/laundry.png", "images/gardening.jpg",
+            # "images/bike.jpg", "images/breakfast.jpg"
+            "images/Table0.jpg"
             ]
     
     for question, image_path in zip(questions, image_paths):
