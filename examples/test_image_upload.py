@@ -1,9 +1,11 @@
 from groq import Groq
 import base64
 import os
+import api_key_handler
 
 # Initialize the Groq client
-client = Groq(api_key=os.environ['GROQ'])
+# client = Groq(api_key=os.environ['GROQ'])
+client = api_key_handler.generate_client(api_key=os.environ['GROQ'])
 
 # Function to encode the image
 def encode_image(image_path):
