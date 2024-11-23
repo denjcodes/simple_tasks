@@ -3,16 +3,16 @@ import os
 import logging
 
 def setup_logger():
-    logging.basicConfig(level=logging.DEBUG, 
+    logging.basicConfig(level=logging.INFO, 
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        filename='prompter.log',
+                        filename='logs/image_question_generator.log',
                         filemode='w')
     logger = logging.getLogger(__name__)
     return logger
 
 client = Groq(api_key="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")
 
-class Prompter:
+class ImageQuestionGenerator:
     def __init__(self):
         self.system_prompt = """You are a Vision Query Generator, specifically designed to create clear and focused questions for vision models based on user tasks. Your role is to:
 
@@ -60,7 +60,7 @@ Question: What items are on the table that need to be cleaned?
 if __name__ == "__main__":
     logger = setup_logger()
 
-    prompter = Prompter()
+    image_question_generator = ImageQuestionGenerator()
 
     tasks = [
             "I need to organize the pantry.", "I need to identify and recycle.",
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             ]
 
     for task in tasks:
-        question = prompter.generate_question(task).split("Question: ")[-1]
+        question = image_question_generator.generate_question(task).split("Question: ")[-1]
         print(question)
-        logger.debug(f"Task: {task}\nQuestion: {question}")
+        logger.info(f"Task: {task}\nQuestion: {question}")
         print("\n")

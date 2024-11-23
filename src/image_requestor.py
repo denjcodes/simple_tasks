@@ -3,9 +3,9 @@ import os
 import logging
 
 def setup_logger():
-    logging.basicConfig(level=logging.DEBUG, 
+    logging.basicConfig(level=logging.INFO, 
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        filename='image_requestor.log',
+                        filename='logs/image_requestor.log',
                         filemode='w')
     logger = logging.getLogger(__name__)
     return logger
