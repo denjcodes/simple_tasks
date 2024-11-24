@@ -44,6 +44,8 @@ class Listener:
         # Transcribe the audio using Whisper
         result = self.model.transcribe(audio_data, fp16=False)
         print("Transcribed Text:", result["text"])
+        
+        return result["text"]
 
 
 # Usage example
