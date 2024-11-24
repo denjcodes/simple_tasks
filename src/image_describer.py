@@ -2,6 +2,8 @@ from groq import Groq
 import os
 import logging
 import base64
+import subprocess
+import os
 
 def setup_logger():
     logging.basicConfig(level=logging.INFO, 
@@ -63,6 +65,29 @@ Description:"""
                         stop=None,
                     )
         return completion.choices[0].message.content
+    
+    def update_picture(self):
+        # Define the Node.js script and expected output file
+        node_script = "src/capture.js"
+        output_file = os.path.join("images", "test_photo.jpg")
+
+        try:
+            # Run the Node.js script
+            print("Running Node.js script to capture image...")
+            subprocess.run(["node", node_script], check=True)
+
+            # Verify if the image file was created
+            if os.path.exists(output_file):
+                print(f"Image captured successfully: {output_file}")
+                image_paths = [output_file]  # Store in a Python list
+                print("Image paths:", image_paths)
+            else:
+                print(f"Error: Output file {output_file} not found.")
+
+        except subprocess.CalledProcessError as e:
+            print(f"Error while running Node.js script: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     logger = setup_logger()
@@ -79,12 +104,12 @@ if __name__ == "__main__":
             ]
     
 
-
+    image_describer.update_picture()
     image_paths = [
             # "images/pantry.jpg", "images/recycling.jpg",
             # "images/laundry.png", "images/gardening.jpg",
             # "images/bike.jpg", "images/breakfast.jpg"
-            "images/Table0.jpg"
+            "images/test_photo.jpg"
             ]
     
     for question, image_path in zip(questions, image_paths):
