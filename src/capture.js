@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const path = require('path');
 
 // Define the output file path
-const outputFile = path.join(__dirname, 'test_photo.jpg');
+const outputFile = path.join(__dirname, '../images/test_photo.jpg');
 
 // FFmpeg command
 const ffmpegCommand = `ffmpeg -f avfoundation -framerate 30 -video_size 1280x720 -i "1" -frames:v 1 ${outputFile} -y`;
