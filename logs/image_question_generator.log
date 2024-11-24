@@ -1,3 +1,18 @@
-2024-11-23 18:22:47,066 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
-2024-11-23 18:22:47,070 - __main__ - INFO - Task: I want to clean this table.
-Question: What objects are on the table, and what is their condition in terms of dirtiness or clutter, to guide the cleaning process?
+2024-11-24 02:33:27,785 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:27,788 - __main__ - INFO - Task: I need to organize the pantry.
+Question: Where are you and what is in your pantry that you see? What types of items do you see (e.g. food containers, spices, canned goods)? What is the condition of these items (e.g. full, empty, expired)? Where exactly are they located (e.g. on shelves, in baskets) in the pantry?
+2024-11-24 02:33:28,231 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:28,233 - __main__ - INFO - Task: I need to identify and recycle.
+Question: What is the scene you're looking at and what objects, such as paper, plastic, or glass, do you see that can be recycled? Can you describe something distinct about each object, and where are they located in the scene?
+2024-11-24 02:33:28,641 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:28,642 - __main__ - INFO - Task: I need to sort my laundry.
+Question: What is the setting of your laundry area and what items of clothing do you see? Are they dirty or clean, and are any of them delicates? Where is each item located in relation to the washer, dryer, and any sorting bins?
+2024-11-24 02:33:28,982 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:28,997 - __main__ - INFO - Task: I need to do gardening.
+Question: Describe the area you see for gardening. What objects, such as plants, tools, or gardening supplies, are present? What condition or unique characteristic can you describe about each of these objects? Where is each object located in the area?
+2024-11-24 02:33:29,358 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:29,359 - __main__ - INFO - Task: I need to repair my bike.
+Question: What is the environment around you like, and what items and tools related to your bike do you see? Is your bike in pieces or is it whole? Where exactly do you see your bike and the tools such as wrench, pliers, and the like?
+2024-11-24 02:33:29,722 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-24 02:33:29,723 - __main__ - INFO - Task: I need to prepare my breakfast.
+Question: Where are you and what objects related to breakfast preparation do you see, such as appliances, food, or cooking tools? What unique characteristics (e.g. brand, size, color) can you describe for each object, and where are they located in your space?

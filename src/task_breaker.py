@@ -4,6 +4,12 @@ import logging
 import os
 from contextlib import redirect_stdout, redirect_stderr
 
+from speaker import TextToSpeech
+from listener import Listener
+
+tts = TextToSpeech()
+stt = Listener()
+
 def setup_logger():
     logging.basicConfig(level=logging.INFO, 
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -20,44 +26,72 @@ class TaskBreaker:
     def __init__(self, task=None, image_query=None, description=None):
         self.system_prompt = """You are a supportive assistant specialized in breaking down tasks for people with cognitive differences like ADHD and Down Syndrome. When given:
 
-                                A high-level task objective
-                                A vision query about an image
-                                A description of that image
+A high-level task objective
+A vision query about an image
+A description of that image
 
-                                You will:
+You will:
 
-                                Break the task into small, clear steps
-                                Use simple, direct language
-                                Mention specific items/locations from the image
-                                Provide encouraging feedback between steps
-                                Provide a complete plan to help the user complete the task
+Break the task into minimum number of concise useful steps in a direct language
+Clearly identify object involved in the step
+Provide a complete plan to help the user complete the task
 
-                                Keep steps short and visual. Focus on "what I see" and "what I do." If a step seems complex, break it down further. Be patient and supportive in your tone.
+Keep steps short and visual. Focus on "what I see" and "what I do."
 
-                                Given a task, a query, and a description, you should generate a series of steps in a python list format.
-                                Task: <task description>
-                                Query: <query description>
-                                Description: <description>
-                                Steps:
-                                ["1. <step 1>", 
-                                "2. <step 2>", 
-                                "3. <step 3>",
-                                ...]
+Given a task, a query, and a description, plan out the minimum steps required to complete the task. You should generate a series of steps in a python list format.
+Task: <task description>
+Query: <query description>
+Description: <description>
+Steps:
+["1. <short, clear action>", 
+"2. <short, clear action>", 
+"3. <short, clear action>",
+...]
 
-                                Example:
-                                Task: Organize the pantry.
-                                Query: What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?
-                                Description: The pantry has 3 shelves. There is a sugar container on the top shelf, a bread loaf and some containers. The middle shelf has some pots and potatoes. The bottom shelf has some cans, apples and empty jars.
-                                Steps:
-                                ["1. Take out the bread loaf and the sugar container.",
-                                "2. Take out the jars and apples from the bottom shelf.",
-                                "3. Move the pots to the top shelf.",
-                                "4. Move the potates to the bottom shelf.",
-                                "5. Place the sugar container on the left side of the middle shelf.",
-                                "6. Place the bread loaf next to the sugar container.",
-                                "7. Put the jars on the right side of the top shelf.",
-                                "8. Put the apples on the right side of the middle shelf."]
-                            """
+Example:
+Task: Organize the pantry.
+Query: What types of food items and containers are present in the pantry, and how are they currently arranged on the shelves?
+Description: **Description:**
+
+The image shows a well-organized pantry with various items on shelves and in baskets. The pantry is stocked with a variety of food containers, spices, and canned goods.
+
+**Shelves:**
+
+* The top shelf is filled with bottles of wine and liquor, as well as some empty containers.
+* The middle shelf contains a mix of full and empty food containers, including jars of peanut butter, jam, and honey.
+* The bottom shelf is home to a collection of canned goods, such as beans, tomatoes, and vegetables.
+
+**Baskets:**
+
+* A green basket on the floor contains a bag of onions and a few other items.
+* A blue basket on the floor is filled with a variety of snacks, including chips, crackers, and cookies.
+
+**Condition of Items:**
+
+* Most of the items on the shelves and in the baskets appear to be in good condition, with no visible signs of expiration or damage.
+* Some of the canned goods have labels that indicate they are still within their expiration dates.
+
+**Location:**
+
+* The pantry is located in a kitchen, as evidenced by the presence of a refrigerator and stove in the background.
+* The pantry is well-lit, with natural light pouring in from a window on the left side of the image.
+
+Overall, the pantry appears to be well-stocked and organized, with a variety of food and drink items available.
+
+Steps:
+["[
+    "1. Remove all items from the pantry shelves and place them on a table.",
+    "2. Group items by category: bottles, containers, canned goods, and jars.
+    "3. Move the green basket with onions to left side of the pantry floor.",
+    "4. Move the blue basket with snacks next to the green basket.",
+    "5. Put empty containers, on the top shelf.",
+    "6. Place the liquor and wine bottle next to the containers on the top shelf.",
+    "7. Place the cans and jars on the middle shelf.",
+    "8. Leave the bottom shelf empty for more groceries in the future.",
+    "9. Good Job! You are done"
+    ]
+"]
+"""
         self.messages = [
                 {"role": "system", "content": self.system_prompt},
                 {"role": "user", "content": self.initial_prompt(task, image_query, description)}
@@ -74,9 +108,7 @@ class TaskBreaker:
     def initial_prompt(self, task, query, description):
         return f"""Task: {task}
                     Query: {query}
-                    Description: {description}
-                    Steps:
-"""
+                    Description: {description}"""
     
     def generate_plan(self):
         i = 0
@@ -92,21 +124,27 @@ class TaskBreaker:
                     )
             if "Steps:" not in completion.choices[0].message.content:
                 print(f'"Steps:" not found in completion. Attempt {i}')
+                print(completion.choices[0].message.content)
                 i += 1
                 continue
             steps = completion.choices[0].message.content.split("Steps:")[-1]
             try:
                 steps = eval(steps)
+                assert isinstance(steps, list)
                 return steps
             except:
                 print(f"Output not in list format. Attempt {i}")
+                print(steps)
+
                 i += 1
+        raise ValueError("Steps not generated")
 
     def guide_system_prompt(self):
         return f"""You are a supportive assistant specialized in breaking down tasks for people with cognitive differences like ADHD and Down Syndrome.
 Given the Task, Image Query, Answer to the Image Query, and the Plan, you will guide the user through the task by providing clear, concise instructions and encouraging feedback.
 The user will update you with the current scene description after each step, and you will determine if the user is on track to complete the task.
-Your task is to guide the user through the task by providing clear, concise instructions to perform the next step and encouraging feedback."""
+Your task is to guide the user through the task by providing clear, concise instructions to perform the next step and encouraging feedback.
+Once the objective of the original task is achieved, end your response with <<END>>"""
 
     def guide_user_prompt(self):
         step_history = ""
@@ -118,8 +156,6 @@ Your task is to guide the user through the task by providing clear, concise inst
         {self.status["task"]}
 # Image Query:
 {self.status["image_query"]}
-# Description:
-{self.status["initial_screen_description"]}
 # Plan:
 {buffer}
 # Steps History:
@@ -139,24 +175,40 @@ What should I do next?
                             {"role": "user", "content": self.guide_user_prompt()}
                         ],
                         temperature=1,
-                        max_tokens=1024,
+                        max_tokens=64,
                         top_p=1,
                         stream=False,
                         stop=None,
                     ).choices[0].message.content.split("# Next Step:")[-1].strip()
             self.log_status()
             print(f"Next Step: {next_step}")
+            tts.speak(f"{next_step}")
             logger.info(f"Next Step: {next_step}")
             self.status["steps_history"].append(next_step)
 
-            new_image_path = 'images/test_photo.jpg'
-            with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
-                image_describer.update_picture()
+            if len(self.status['steps_history']) >= len(self.status['plan']):
+                break
+
+            tts.speak("If you are done with the task, please say 'done' or 'end'")
+            end_confirmation = stt.listen()
+            if 'done' in end_confirmation.lower() or 'end' in end_confirmation.lower():
+                break
+
+            if next_step.endswith("<<END>>"):
+                break
 
             user_input = input("Has this step been completed? (Y/N): ").strip().upper()
             if user_input == "N" or user_input == "exit":
                 break
+
+            new_image_path = 'images/test_photo.jpg'
+            with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
+                image_describer.update_picture()
             self.update_screen_description(new_image_path)
+        message = "Good Job! You followed all the steps and finished your task."
+        print(message)
+        tts.speak(message)
+
     
     def update_screen_description(self, new_image_path):
         self.status["current_screen_description"] = image_describer.generate_description(self.status["image_query"], new_image_path).split("Description: ")[-1]

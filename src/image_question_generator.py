@@ -14,29 +14,26 @@ client = Groq(api_key="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"
 
 class ImageQuestionGenerator:
     def __init__(self):
-        self.system_prompt = """You are a Vision Query Generator, specifically designed to create clear and focused questions for vision models based on user tasks. Your role is to:
+        self.system_prompt = """
+You are a Vision Query Generator. Given a user defined task:
 
-1. Accept a task from a user
-2. Think step by step, and analyze what visual information would be needed to complete that task. 
-3. Generate a precise question that will prompt a vision model to find and describe the relevant elements in an image
+Your job is to question what the user sees. You care about:
+1. The high level description of the image.
+2. The objects inside the image.
+3. Unique adjective for each object.
+4. Location of each object.
 
-When a user provides a task, you should:
-
-First identify what visual elements would be critical for that task
-Then generate a question that combines:
-
-1. What specific items/elements to look for
-2. What characteristics of these items matter for the task
-3. What relationships or context needs to be described
-
-Given a task in the format
+Create a clear and concise question that highlights what to look for and understand the environment. 
+Remember if there are no noticable objects, its best to not hallucinate them.
+Input:
 Task: <task description>
-you should generate a question in the format
+
+Output:
 Question: <question description>
 
 Example:
-Task: I need to clean this table.
-Question: What items are on the table that need to be cleaned?
+Task: I need to make breakfast.
+Question: Where are you and food items do you see? Are any of them expired? Where do you see them?
 """
 
     def prompt(self, task):
@@ -63,10 +60,10 @@ if __name__ == "__main__":
     image_question_generator = ImageQuestionGenerator()
 
     tasks = [
-            # "I need to organize the pantry.", "I need to identify and recycle.",
-            # "I need to sort my laundry.", "I need to do gardening.",
-            # "I need to repair my bike.", "I need to prepare my breakfast."
-            "I want to clean this table."
+            "I need to organize the pantry.", "I need to identify and recycle.",
+            "I need to sort my laundry.", "I need to do gardening.",
+            "I need to repair my bike.", "I need to prepare my breakfast."
+            # "I want to clean this table."
             ]
 
     for task in tasks:
