@@ -38,7 +38,8 @@ Provide a complete plan to help the user complete the task
 
 Keep steps short and visual. Focus on "what I see" and "what I do."
 
-Given a task, a query, and a description, plan out the minimum steps required to complete the task. You should generate a series of steps in a python list format.
+Given a task, a query, and a description, plan out the minimum steps required to complete the task. Avoid taking double looks at objects.
+You should generate a series of steps in a python list format.
 Task: <task description>
 Query: <query description>
 Description: <description>
@@ -102,7 +103,7 @@ Steps:
             "initial_screen_description": description,
             "plan": self.generate_plan(),
             "steps_history": [],
-            "current_screen_description": None,
+            "current_screen_description": description,
         }
 
     def initial_prompt(self, task, query, description):
@@ -175,7 +176,7 @@ What should I do next?
                             {"role": "user", "content": self.guide_user_prompt()}
                         ],
                         temperature=1,
-                        max_tokens=64,
+                        max_tokens=128,
                         top_p=1,
                         stream=False,
                         stop=None,
