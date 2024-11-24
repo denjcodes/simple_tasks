@@ -45,7 +45,7 @@ Describer           (Picture of Table)+(What do you see on the table): I see a p
 Example for memory task:
 <Persona for task breaker>
 Task: <task>
-Query: <query>git p
+Query: <query>git ps
 Description: <description>
 Steps:
 - <step 1>
