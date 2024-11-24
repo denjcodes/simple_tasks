@@ -3,7 +3,7 @@ import sounddevice as sd
 import numpy as np
 
 class Listener:
-    def __init__(self, model_name="base", samplerate=16000, silence_threshold=0.05, pause_duration=2.0):
+    def __init__(self, model_name="base", samplerate=16000, silence_threshold=0.15, pause_duration=2.0):
         self.model = whisper.load_model(model_name)
         self.samplerate = samplerate
         self.silence_threshold = silence_threshold

@@ -1,6 +1,8 @@
 import groq
 from image_describer import ImageDescriber
 import logging
+import os
+from contextlib import redirect_stdout, redirect_stderr
 
 def setup_logger():
     logging.basicConfig(level=logging.INFO, 
@@ -108,19 +110,25 @@ Your task is to guide the user through the task by providing clear, concise inst
 
     def guide_user_prompt(self):
         step_history = ""
+        buffer = "\n".join(self.status["plan"])
         for i, step in enumerate(self.status["steps_history"]):
             step_history += f"{i+1}. {step}\n"
 
-        return f"""# Task:\n{self.status["task"]}
-# Image Query:\n{self.status["image_query"]}
-# Description:\n{self.status["initial_screen_description"]}
-# Plan:\n{"\n".join(self.status["plan"])}
-# Steps History:\n{step_history}
-# Current Screen Description:\n{self.status["current_screen_description"]}
+        return f"""# Task:
+        {self.status["task"]}
+# Image Query:
+{self.status["image_query"]}
+# Description:
+{self.status["initial_screen_description"]}
+# Plan:
+{buffer}
+# Steps History:
+{step_history}
+# Current Screen Description:
+{self.status["current_screen_description"]}
 
 What should I do next?
-# Next Step:
-"""
+# Next Step:"""
 
     def guide_through_task(self):
         while True:
@@ -140,8 +148,13 @@ What should I do next?
             print(f"Next Step: {next_step}")
             logger.info(f"Next Step: {next_step}")
             self.status["steps_history"].append(next_step)
-            new_image_path = input("Please provide the path to the new image: ")
-            if new_image_path == "exit":
+
+            new_image_path = 'images/test_photo.jpg'
+            with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
+                image_describer.update_picture()
+
+            user_input = input("Has this step been completed? (Y/N): ").strip().upper()
+            if user_input == "N" or user_input == "exit":
                 break
             self.update_screen_description(new_image_path)
     

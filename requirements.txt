@@ -4,3 +4,4 @@ openai-whisper
 ffmpeg-python
 numpy==1.26.4
 ffmpeg
+sounddevice

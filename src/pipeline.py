@@ -1,6 +1,8 @@
 from speaker import TextToSpeech
 from listener import Listener
 import logging
+import os
+from contextlib import redirect_stdout, redirect_stderr
 
 def setup_logger():
     logging.basicConfig(level=logging.INFO, 
@@ -51,9 +53,11 @@ image_question_generator = ImageQuestionGenerator()
 image_question = image_question_generator.generate_question(task).split("Question: ")[-1]
 logger.info(f"Generated Image Question: {image_question}")
 
-image_path = 'images/can_jelly_bottle.jpg'
+image_path = 'images/test_photo.jpg'
 from image_describer import ImageDescriber
 image_describer = ImageDescriber()
+with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
+    image_describer.update_picture()
 description = image_describer.generate_description(image_question, image_path).split("Description: ")[-1]
 logger.info(f"Generated Image Description: {description}")
 

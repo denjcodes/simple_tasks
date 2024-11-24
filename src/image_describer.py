@@ -73,8 +73,9 @@ Description:"""
 
         try:
             # Run the Node.js script
-            print("Running Node.js script to capture image...")
-            subprocess.run(["node", node_script], check=True)
+            # print("Running Node.js script to capture image...")
+            # subprocess.run(["node", node_script], check=True)
+            subprocess.run(["node", node_script], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
             # Verify if the image file was created
             if os.path.exists(output_file):
