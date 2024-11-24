@@ -1,9 +1,21 @@
 import groq
+from image_describer import ImageDescriber
+import logging
+
+def setup_logger():
+    logging.basicConfig(level=logging.INFO, 
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        filename='logs/task_breaker.log',
+                        filemode='w')
+    logger = logging.getLogger(__name__)
+    return logger
+logger = setup_logger()
 
 client = groq.Groq(api_key="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")
+image_describer = ImageDescriber()
 
 class TaskBreaker:
-    def __init__(self):
+    def __init__(self, task=None, image_query=None, description=None):
         self.system_prompt = """You are a supportive assistant specialized in breaking down tasks for people with cognitive differences like ADHD and Down Syndrome. When given:
 
                                 A high-level task objective
@@ -44,26 +56,32 @@ class TaskBreaker:
                                 "7. Put the jars on the right side of the top shelf.",
                                 "8. Put the apples on the right side of the middle shelf."]
                             """
+        self.messages = [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": self.initial_prompt(task, image_query, description)}
+                ]
+        self.status = {
+            "task": task,
+            "image_query": image_query,
+            "initial_screen_description": description,
+            "plan": self.generate_plan(),
+            "steps_history": [],
+            "current_screen_description": None,
+        }
 
     def initial_prompt(self, task, query, description):
         return f"""Task: {task}
                     Query: {query}
                     Description: {description}
                     Steps:
-                """
+"""
     
-    def init_messages(self, task, query, description):
-        return [
-                {"role": "system", "content": self.system_prompt},
-                {"role": "user", "content": self.initial_prompt(task, query, description)}
-                ]
-    
-    def generate_steps(self, task, query, description):
+    def generate_plan(self):
         i = 0
         while i < 5:
             completion = client.chat.completions.create(
                         model="llama-3.1-70b-versatile",
-                        messages=self.init_messages(task, query, description),
+                        messages=self.messages,
                         temperature=1,
                         max_tokens=1024,
                         top_p=1,
@@ -81,50 +99,57 @@ class TaskBreaker:
             except:
                 print(f"Output not in list format. Attempt {i}")
                 i += 1
-                
-        #     steps = completion.choices[0].message.content.split("\n")[6:]
-        #     if len(steps) > 1:
-        #         return steps
-        #     i += 1
-        # completion = client.chat.completions.create(
-        #                 model="llama-3.1-70b-versatile",
-        #                 messages=self.init_messages(task, query, description),
-        #                 temperature=1,
-        #                 max_tokens=1024,
-        #                 top_p=1,
-        #                 stream=False,
-        #                 stop=None,
-        #             )
-        # return completion.choices[0].message.content
-    def breakdown_steps(self, task, query, description, steps):
-        return {
-            "task": task,
-            "query": query,
-            "description": description,
-            "steps": steps,
-            "current_step": 0,
-            "scene_description": None
-        }
 
-    def update_task(self, memory, scene_description=None):
-        if scene_description:
-            memory["scene_description"] = scene_description
-        
-        current_step = memory["current_step"]
-        if current_step < len(memory["steps"]):
-            next_step = memory["steps"][current_step]
-            return {
-                "status": "in progress",
-                "next_step": next_step,
-                "on_track": True  # Add logic to determine if the scene aligns with the steps
-            }
-        else:
-            return {"status": "complete", "next_step": None, "on_track": True}
+    def guide_system_prompt(self):
+        return f"""You are a supportive assistant specialized in breaking down tasks for people with cognitive differences like ADHD and Down Syndrome.
+Given the Task, Image Query, Answer to the Image Query, and the Plan, you will guide the user through the task by providing clear, concise instructions and encouraging feedback.
+The user will update you with the current scene description after each step, and you will determine if the user is on track to complete the task.
+Your task is to guide the user through the task by providing clear, concise instructions to perform the next step and encouraging feedback."""
 
-    def complete_step(self, memory):
-        if memory["current_step"] < len(memory["steps"]):
-            memory["current_step"] += 1
+    def guide_user_prompt(self):
+        step_history = ""
+        for i, step in enumerate(self.status["steps_history"]):
+            step_history += f"{i+1}. {step}\n"
 
+        return f"""# Task:\n{self.status["task"]}
+# Image Query:\n{self.status["image_query"]}
+# Description:\n{self.status["initial_screen_description"]}
+# Plan:\n{"\n".join(self.status["plan"])}
+# Steps History:\n{step_history}
+# Current Screen Description:\n{self.status["current_screen_description"]}
+
+What should I do next?
+# Next Step:
+"""
+
+    def guide_through_task(self):
+        while True:
+            next_step = client.chat.completions.create(
+                        model="llama-3.1-70b-versatile",
+                        messages=[
+                            {"role": "system", "content": self.guide_system_prompt()},
+                            {"role": "user", "content": self.guide_user_prompt()}
+                        ],
+                        temperature=1,
+                        max_tokens=1024,
+                        top_p=1,
+                        stream=False,
+                        stop=None,
+                    ).choices[0].message.content.split("# Next Step:")[-1].strip()
+            self.log_status()
+            print(f"Next Step: {next_step}")
+            logger.info(f"Next Step: {next_step}")
+            self.status["steps_history"].append(next_step)
+            new_image_path = input("Please provide the path to the new image: ")
+            if new_image_path == "exit":
+                break
+            self.update_screen_description(new_image_path)
+    
+    def update_screen_description(self, new_image_path):
+        self.status["current_screen_description"] = image_describer.generate_description(self.status["image_query"], new_image_path).split("Description: ")[-1]
+
+    def log_status(self):
+        logger.info(f"Task: {self.status['task']}\nImage Query: {self.status['image_query']}\nInitial Screen Description: {self.status['initial_screen_description']}\nPlan: {self.status['plan']}\nSteps History: {self.status['steps_history']}\nCurrent Screen Description: {self.status['current_screen_description']}")
     
 if __name__ == "__main__":
     task_breaker = TaskBreaker()
@@ -156,26 +181,5 @@ if __name__ == "__main__":
             "The table features two water bottles, one with a label indicating it is half full and the other with a label indicating it is nearly empty. Additionally, there are two cans, one of which appears to be empty and the other with a label indicating it is nearly full. A bag of chips is also present, with some of its contents spilled out onto the table. The overall condition of the table is moderately dirty, with visible crumbs and spills from the chips."            
             ]
     
-    for task, query, description in zip(tasks, queries, descriptions):
-        memory = task_breaker.generate_steps(task, query, description)
-        steps = task_breaker.breakdown_steps(task, query, description, memory)
-
-        print("Initial Task Breakdown:", steps)
-
-        while True:
-            # User interaction for current step
-            step_info = task_breaker.update_task(steps)
-            if step_info["status"] == "complete":
-                print("Assistant: Great! The task is complete.")
-                break
-
-            print(f"Assistant: The next step is: {step_info['next_step']}")
-            
-            # User input
-            user_input = input("Has this step been completed? (Y/N): ").strip().lower()
-            if user_input == "y":
-                task_breaker.complete_step(steps)
-            else:
-                print("Assistant: Let me know when it's done.")
-        break
+    task_breaker.guide_through_task(tasks, queries, descriptions)
 
